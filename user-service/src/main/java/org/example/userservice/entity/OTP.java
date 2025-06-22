@@ -30,4 +30,8 @@ public class OTP {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userId;
+
+    public boolean isExpired(){
+        return expirationTime.isBefore(LocalDateTime.now());
+    }
 }

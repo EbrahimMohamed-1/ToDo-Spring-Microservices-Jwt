@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.example.userservice.utils.TokenType;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class JWT {
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
-
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
 
 }
