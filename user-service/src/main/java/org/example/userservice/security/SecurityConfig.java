@@ -1,72 +1,90 @@
 package org.example.userservice.security;
 
-
-
-import org.example.userservice.security.passwordencoder.PasswordEncoderConfig;
+import org.example.userservice.security.userdetailsserviceimpl.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity(debug = true)
 @EnableMethodSecurity
-@Import(
-        {PasswordEncoderConfig.class,
-        }
 
-
-)
 public class SecurityConfig {
+
+    @Autowired
+    private JWTFilter jwtFilter;
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    public SecurityConfig() {
+    }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        configureBasicAuthentication(http);
         configureEndpointSecurity(http);
         configureCsrf(http);
         configureSessionManagement(http);
         return http.build();
     }
 
-
-    private static void configureBasicAuthentication(HttpSecurity http) throws Exception{
-
-        http.httpBasic(c -> c.realmName("task"));
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
-    private static void configureEndpointSecurity(HttpSecurity http) throws Exception{
+    @Bean
+    PasswordEncoder passwordEncoder(){
+
+        return new BCryptPasswordEncoder();
+
+    }
+
+
+    private void configureEndpointSecurity(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/**").hasRole("USER")
-                        //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                .permitAll()
                 .anyRequest().authenticated()
 
         )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .formLogin(withDefaults());
 
     }
 
-    private static void configureCsrf(HttpSecurity http) throws Exception {
+    private void configureCsrf(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
     }
 
-    private static void configureSessionManagement(HttpSecurity http) throws Exception {
+    private void configureSessionManagement(HttpSecurity http) throws Exception {
         http.sessionManagement(s -> s
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
     }
-
-//    private static void configureApiKeyAuthentication(HttpSecurity http) throws Exception {
-//        http.with(new ApiKeyAuthenticationConfigurer(), Customizer.withDefaults());
-//    }
 
 
 }

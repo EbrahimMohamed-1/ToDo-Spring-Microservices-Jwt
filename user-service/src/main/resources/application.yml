@@ -21,4 +21,4 @@ logging:
 
 env_variables:
   JWT_SECRET: "EbrahimMohamed-1EbrahimMohamed-1123456789"
-  JWT_EXPIRATION_MS: "5000"
+  JWT_EXPIRATION_MS: "3600000"
