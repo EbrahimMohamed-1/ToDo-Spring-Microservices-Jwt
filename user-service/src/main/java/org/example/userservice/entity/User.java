@@ -22,11 +22,11 @@ public class User implements UserDetails {
     private String password;
     private boolean enabled;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<OTP> otp;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
-    private List<JWT> jwt;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RefreshToken> jwt;
 
 
     @Override

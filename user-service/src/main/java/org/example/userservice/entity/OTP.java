@@ -1,10 +1,7 @@
 package org.example.userservice.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.validation.annotation.Validated;
 
@@ -13,8 +10,9 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Validated
+@Builder
 @Entity
 public class OTP {
     @Id
@@ -28,8 +26,8 @@ public class OTP {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "user")
+    private User user;
 
     public boolean isExpired(){
         return expirationTime.isBefore(LocalDateTime.now());
