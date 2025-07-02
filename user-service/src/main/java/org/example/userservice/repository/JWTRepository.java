@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface JWTRepository extends JpaRepository<RefreshToken,Integer> {
     Optional<RefreshToken> findByToken(String token);
-    void deleteByToken(String token);
 
     @Modifying
     @Query("UPDATE RefreshToken r SET r.revoked = true WHERE r.user.email = :email AND r.revoked = false")

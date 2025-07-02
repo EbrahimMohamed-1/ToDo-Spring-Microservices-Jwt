@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface OTPRepository extends JpaRepository<OTP,Integer> {
-    OTP findByUserId(User userId);
-    void deleteByUserId(User userId);
+    OTP findByUser(User user);
+    void deleteByUser(User userId);
 
 }

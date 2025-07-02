@@ -35,7 +35,7 @@ public class OTPService{
     public void deleteAllOtpCodes(String email) {
         User user = userDetailsService.loadUserByUsername(email);
 
-        otpRepository.deleteByUserId(user);
+        otpRepository.deleteByUser(user);
 
     }
 
@@ -44,7 +44,7 @@ public class OTPService{
 
         User user = userDetailsService.loadUserByUsername(email);
 
-       OTP otp = otpRepository.findByUserId(user);
+       OTP otp = otpRepository.findByUser(user);
 
 
         if (otp.getExpirationTime().isBefore(LocalDateTime.now())) {
