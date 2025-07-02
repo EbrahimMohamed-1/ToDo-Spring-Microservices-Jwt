@@ -1,7 +1,23 @@
 spring:
   application:
     name: "user-service"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ebrahimmohammed10101@gmail.com
+    password: you
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/UserService?useSSL=false&amp
+    username: root
+    password: root
 
 server:
   port: 8081
@@ -21,4 +37,4 @@ logging:
 
 env_variables:
   JWT_SECRET: "EbrahimMohamed-1EbrahimMohamed-1123456789"
-  JWT_EXPIRATION_MS: "3600000"
+  JWT_EXPIRATION_MS: "600000" #10 minutes

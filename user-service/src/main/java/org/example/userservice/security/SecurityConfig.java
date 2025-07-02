@@ -62,6 +62,10 @@ public class SecurityConfig {
 
     }
 
+    @Bean
+    public JWTFilter jwtFilter(){
+        return new JWTFilter();
+    }
 
     private void configureEndpointSecurity(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
