@@ -28,7 +28,7 @@ public class AuthService {
     private final UserDetailsServiceImpl userDetailsService;
     private final JWTService jwtService;
     private final JWTRepository jwtRepository;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public SignupResponse signup(SignupRequest request) {
         if (userDetailsService.loadUserByUsername(request.getEmail()) != null) {
